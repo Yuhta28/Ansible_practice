@@ -1,0 +1,6 @@
+---
+- name: 環境変数出力Play
+  hosts: all
+  tasks:
+    - name: HOME環境変数を出力
+      command: "echo {{ ansible_env.HOME | quote }}"
