@@ -2,24 +2,6 @@
 - name: Playbookチュートリアル
   hosts: all
   become: true
-  tasks:
-    - name: libselinux-pythonをインストール
-      yum:
-        name: libselinux-python
-        state: present
-
-    - name: epelレポジトリをインストール
-      yum:
-        name: epel-release
-        state: present
-
-    - name: Nginxをインストール
-      yum:
-        name: nginx
-        state: present
-
-    - name: Nginxを起動
-      service:
-        name: nginx
-        state: started
-        enabled: true
+  roles:
+#    - role: nginx
+     - role: gal/geerlingguy.nginx
