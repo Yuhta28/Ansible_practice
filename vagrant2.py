@@ -2,7 +2,9 @@
 """
 Vagrant external inventory script. Automatically finds the IP of the booted vagrant vm(s), and
 returns it under the host group 'vagrant'
+
 Example Vagrant configuration using this script:
+
     config.vm.provision :ansible do |ansible|
       ansible.playbook = "./provision/your_playbook.yml"
       ansible.inventory_file = "./provision/inventory/vagrant.py"
@@ -36,7 +38,7 @@ import os.path
 import subprocess
 import re
 from paramiko import SSHConfig
-from io import BytesIO
+from cStringIO import StringIO
 from optparse import OptionParser
 from collections import defaultdict
 try:
@@ -72,12 +74,12 @@ def get_ssh_config():
 
 # list all the running boxes
 def list_running_boxes():
-    output = subprocess.check_output([b"vagrant", b"status"]).split(b'\n')
+    output = subprocess.check_output(["vagrant", "status"]).split('\n')
 
     boxes = []
 
     for line in output:
-        matcher = re.search(b"([^\s]+)[\s]+running \(.+", line)
+        matcher = re.search("([^\s]+)[\s]+running \(.+", line)
         if matcher:
             boxes.append(matcher.group(1))
 
@@ -88,9 +90,9 @@ def list_running_boxes():
 def get_a_ssh_config(box_name):
     """Gives back a map of all the machine's ssh configurations"""
 
-    output = subprocess.check_output([b"vagrant", b"ssh-config", box_name])
+    output = subprocess.check_output(["vagrant", "ssh-config", box_name])
     config = SSHConfig()
-    config.parse(BytesIO(output))
+    config.parse(StringIO(output))
     host_config = config.lookup(box_name)
 
     # man 5 ssh_config:
@@ -111,13 +113,13 @@ if options.list:
     for host in ssh_config:
         meta['hostvars'][host] = ssh_config[host]
 
-    print((json.dumps({_group: list(ssh_config.keys()), '_meta': meta})))
+    print(json.dumps({_group: list(ssh_config.keys()), '_meta': meta}))
     sys.exit(0)
 
 # Get out the host details
 # ------------------------------
 elif options.host:
-    print((json.dumps(get_a_ssh_config(options.host))))
+    print(json.dumps(get_a_ssh_config(options.host)))
     sys.exit(0)
 
 # Print out help
