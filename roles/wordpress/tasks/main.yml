@@ -69,7 +69,7 @@
     src: wordpress.nginx.j2.conf
     dest: "{{ wordpress_nginx_config_dir }}/wordpress.conf"
   notify:
-    - Nginxサービスのリロード
+    - Nginxをリロード
 
 - name: Nginx用設定ファイルをテスト
   command: nginx -t

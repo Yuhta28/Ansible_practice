@@ -1,6 +1,6 @@
 ---
 # handlers file for nginx
-- name: Nginxサービスのリロード
+- name: Nginxをリロード
   service:
     name: nginx
     state: reloaded
