@@ -8,7 +8,7 @@
       private: no
       default: "t2.micro"
     - name: "ec2_key_name"
-      private: no
+      default: "Keypair_for_VPC"
     - name: "ec2_group"
       private: no
       default: "default"

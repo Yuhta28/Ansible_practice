@@ -16,27 +16,22 @@
 - debug: var=vpc_subnet_find
 
 - name: Search for the latest Amazon Linux2 AMI
-  ec2_ami_facts:
-    name: "amzn-ami-hvm-*-gp2"
-    owner: amazon
-    architecuture: x84_64
-    virtualization_type: hvm
-    sort: creationDate
-    sort_order: descending
-    sort_end: 1
-    no_result_action: fail
+  ec2_ami_info:
+    image_id: ami-0ec225b5e01ccb706
+    region: ap-southeast-1
   register: ami_find
 
 - debug: var=ami_find
 
-- name: Launch  EC2 Instance
+- name: Launch EC2 Instance
   ec2:
-    image: "{{ ami_find.results[0].ami_id }}"
+    image: "{{ ami_find.images[0].image_id }}"
     instance_type: "{{ ec2_instance_type }}"
     key_name: "{{ ec2_key_name }}"
     vpc_subnet_id: "{{ vpc_subnet_find.subnets[0].id }}"
+    region: ap-southeast-1
     group: "{{ ec2_group }}"
-    assign_public_ip: true
+    assign_public_ip: yes
     instance_tags:
       Name: "{{ ec2_name }}"
     count_tag:
