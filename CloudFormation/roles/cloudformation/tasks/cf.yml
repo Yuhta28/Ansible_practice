@@ -1,0 +1,24 @@
+---
+- name: Search for the latest Amazon Linux AMI
+  ec2_ami_info:
+    image_id: ami-0ec225b5e01ccb706
+    region: ap-southeast-1
+  register: ami_find
+
+- debug: var=ami_find
+
+- name: launch ansible cloudformation
+  cloudformation:
+    stack_name: ansible-cloudformation-{{ cloudformation_Environment }}
+    state: present
+    template: roles/cloudformation/files/cloudformation.json
+    template_parameters:
+      KeyName: "{{ cloudformation_KeyName }}"
+      SSHLocation: "{{ cloudformation_SSHLocation }}"
+      AMI: "{{ ami_find.images[0].image_id }}"
+    tags:
+      stack: ansible-cloudformation
+      env: "{{ cloudformation_Environment }}"
+  register: output
+
+- debug: var=output
