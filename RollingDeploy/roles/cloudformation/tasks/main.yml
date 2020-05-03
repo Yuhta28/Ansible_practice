@@ -1,2 +1,3 @@
 ---
+- include: cf.yml
 # tasks file for cloudformation

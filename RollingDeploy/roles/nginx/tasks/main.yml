@@ -1,2 +1,2 @@
 ---
-# tasks file for nginx
+- include: nginx.yml
