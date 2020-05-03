@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Stop nginx
+      systemd:
+        name: nginx
+        state: stopped
+
+    - name: Wait until logging message appears
+      wait_for:
+        path: /var/log/messages
+        search_regex: 'Stopped The nginx HTTP and reverse proxy server.'
+
+    - name: Wait untip pid file is removed
+      wait_for:
+        path: /run/nginx.pid
+        state: absent
+
+    - name: Wait until port is stopped
+      wait_for:
+        port: 80
+        host: "{{ ansible_ssh_host }}"
+        state: stopped
+        timeout: 10
